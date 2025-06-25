@@ -6,6 +6,7 @@ public class Main {
     static ArrayList<String> nomes = new ArrayList<>();
     static ArrayList<Double> valores = new ArrayList<>();
     static ArrayList<Double> litros = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -46,6 +47,10 @@ public class Main {
                     acimaMedia();
                     break;
 
+                case 6:
+                    removerNome(sc);
+                    break;
+
                 case 0:
                     System.out.println("Saindo do programa...");
                     break;
@@ -57,13 +62,14 @@ public class Main {
 
         sc.close();
     }
+
     public static void menu() {
         System.out.println("1 - Cadastrar uma bebida");
         System.out.println("2 - Listar todas as bebidas");
         System.out.println("3 - Mostrar a bebida mais cara");
         System.out.println("4 - Calcular a média de preços");
         System.out.println("5 - Listar bebidas acima da média");
-        System.out.println("6 - Remover por nome.");
+        System.out.println("6 - Remover por nome");
         System.out.println("0 - Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -190,17 +196,58 @@ public class Main {
     public static void removerNome(Scanner sc) {
         if (nomes.isEmpty()) {
             System.out.println("Nenhum produto cadastrado.");
+            return;
         }
-        System.out.println("Digite o nome do produto que deseja remover: ");
-        String nomeRemover = sc.nextLine();
 
-        int indice = nomes.indexOf(nomeRemover);
-        if (indice >= 0) {
-            nomes.remove(indice);
-            valores.remove(indice);
-            System.out.println("Produto removido com sucesso!");
-        } else {
-            System.out.println("Produto não encontrado");
+        String nomeRemover;
+
+        while (true) {
+            System.out.print("Digite o nome do produto que deseja remover: ");
+            nomeRemover = sc.nextLine();
+
+            int i;
+            for (i = 0; i < nomes.size(); i++) {
+                if (nomes.get(i).equalsIgnoreCase(nomeRemover)) {
+                    break;
+                }
+            }
+
+            if (i < nomes.size()) {
+                break;
+            } else {
+                System.out.println("Bebida não encontrada. Tente novamente.");
+            }
+        }
+
+        double litroRemover = 0;
+        boolean litragemValida = false;
+        while (!litragemValida) {
+            try {
+                System.out.print("Digite a litragem do produto (ex: 500 ou 1.5): ");
+                litroRemover = sc.nextDouble();
+                sc.nextLine();
+                litragemValida = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Erro: Digite um valor numérico para a litragem.");
+                sc.nextLine();
+            }
+        }
+
+        boolean encontrado = false;
+
+        for (int i = 0; i < nomes.size(); i++) {
+            if (nomes.get(i).equalsIgnoreCase(nomeRemover) && litros.get(i).equals(litroRemover)) {
+                nomes.remove(i);
+                litros.remove(i);
+                valores.remove(i);
+                encontrado = true;
+                System.out.println("Produto removido com sucesso!");
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Produto com essa litragem não encontrado.");
         }
     }
 }
