@@ -63,7 +63,7 @@ public class Main {
         System.out.println("3 - Mostrar a bebida mais cara");
         System.out.println("4 - Calcular a média de preços");
         System.out.println("5 - Listar bebidas acima da média");
-        System.out.println("6 - Remover por nome");
+        System.out.println("6 - Remover por nome.");
         System.out.println("0 - Sair");
         System.out.print("Escolha uma opção: ");
     }
