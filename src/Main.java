@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -62,6 +63,7 @@ public class Main {
         System.out.println("3 - Mostrar a bebida mais cara");
         System.out.println("4 - Calcular a média de preços");
         System.out.println("5 - Listar bebidas acima da média");
+        System.out.println("6 - Remover por nome");
         System.out.println("0 - Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -70,9 +72,19 @@ public class Main {
         System.out.print("Digite o nome da bebida: ");
         String nome = sc.nextLine();
 
-        System.out.print("Digite a litragem da bebida (ex: 500 para 500ml, 1.5 para 1,5L): ");
-        double litro = sc.nextDouble();
-        sc.nextLine();
+        double litro = 0;
+        boolean litragemValida = false;
+        while (!litragemValida) {
+            try {
+                System.out.print("Digite a litragem da bebida (ex: 500 para 500ml, 1.5 para 1,5L): ");
+                litro = sc.nextDouble();
+                sc.nextLine();
+                litragemValida = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Erro: Por favor, digite somente números para a litragem.");
+                sc.nextLine();
+            }
+        }
 
         boolean jaExiste = false;
         for (int i = 0; i < nomes.size(); i++) {
@@ -87,20 +99,29 @@ public class Main {
             return;
         }
 
-        System.out.print("Digite o preço da bebida: R$");
-        if (sc.hasNextDouble()) {
-            double preco = sc.nextDouble();
-            sc.nextLine();
-
-            nomes.add(nome);
-            litros.add(litro);
-            valores.add(preco);
-            System.out.println("Bebida cadastrada com sucesso!");
-            System.out.println();
-        } else {
-            System.out.println("Preço inválido.");
-            sc.nextLine();
+        double preco = 0;
+        boolean precoValido = false;
+        while (!precoValido) {
+            System.out.print("Digite o preço da bebida: R$");
+            try {
+                preco = sc.nextDouble();
+                sc.nextLine();
+                if (preco > 0) {
+                    precoValido = true;
+                } else {
+                    System.out.println("Erro: O preço deve ser maior que zero. Digite um valor válido.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Erro: Por favor, digite somente números para o preço.");
+                sc.nextLine();
+            }
         }
+
+        nomes.add(nome);
+        litros.add(litro);
+        valores.add(preco);
+        System.out.println("Bebida cadastrada com sucesso!");
+        System.out.println();
     }
 
     public static void listarBebidas() {
@@ -164,5 +185,22 @@ public class Main {
             }
         }
         System.out.println();
+    }
+
+    public static void removerNome(Scanner sc) {
+        if (nomes.isEmpty()) {
+            System.out.println("Nenhum produto cadastrado.");
+        }
+        System.out.println("Digite o nome do produto que deseja remover: ");
+        String nomeRemover = sc.nextLine();
+
+        int indice = nomes.indexOf(nomeRemover);
+        if (indice >= 0) {
+            nomes.remove(indice);
+            valores.remove(indice);
+            System.out.println("Produto removido com sucesso!");
+        } else {
+            System.out.println("Produto não encontrado");
+        }
     }
 }
