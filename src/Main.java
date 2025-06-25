@@ -292,7 +292,7 @@ public class Main {
             }
 
             if (i < nomes.size()) {
-                break; // Nome encontrado
+                break;
             } else {
                 System.out.println("Bebida não encontrada. Tente novamente.");
             }
@@ -301,14 +301,12 @@ public class Main {
         double litragem = 0;
         boolean litragemEncontrada = false;
 
-        // Loop para pedir litragem até achar a correta para o nome informado
         while (!litragemEncontrada) {
             try {
                 System.out.print("Digite a litragem da bebida (ex: 500 ou 1.5): ");
                 litragem = sc.nextDouble();
                 sc.nextLine();
 
-                // Verifica se existe essa litragem para o nome informado
                 litragemEncontrada = false;
                 for (int i = 0; i < nomes.size(); i++) {
                     if (nomes.get(i).equalsIgnoreCase(nomeAtualizar) && litros.get(i).equals(litragem)) {
@@ -327,8 +325,6 @@ public class Main {
             }
         }
 
-        // Aqui já temos nome e litragem válidos, vamos pedir o novo preço
-
         boolean precoAtualizado = false;
         while (!precoAtualizado) {
             System.out.print("Digite o novo preço: R$");
@@ -336,19 +332,34 @@ public class Main {
                 double novoPreco = sc.nextDouble();
                 sc.nextLine();
 
-                if (novoPreco > 0) {
-                    // Atualiza o preço no índice correto
-                    for (int i = 0; i < nomes.size(); i++) {
-                        if (nomes.get(i).equalsIgnoreCase(nomeAtualizar) && litros.get(i).equals(litragem)) {
+                if (novoPreco <= 0) {
+                    System.out.println("Erro: O preço deve ser maior que zero.");
+                    continue;
+                }
+
+                boolean encontrou = false;
+
+                for (int i = 0; i < nomes.size(); i++) {
+                    if (nomes.get(i).equalsIgnoreCase(nomeAtualizar) && litros.get(i).equals(litragem)) {
+                        double precoAtual = valores.get(i);
+
+                        if (novoPreco == precoAtual) {
+                            System.out.println("Erro: O novo preço é igual ao preço atual. Digite um valor diferente.");
+                        } else {
                             valores.set(i, novoPreco);
                             System.out.println("Preço atualizado com sucesso!");
                             precoAtualizado = true;
-                            break;
                         }
+
+                        encontrou = true;
+                        break;
                     }
-                } else {
-                    System.out.println("Erro: O preço deve ser maior que zero.");
                 }
+
+                if (!encontrou) {
+                    System.out.println("Produto não encontrado para atualização.");
+                }
+
             } catch (InputMismatchException e) {
                 System.out.println("Erro: Digite um número válido para o preço.");
                 sc.nextLine();
